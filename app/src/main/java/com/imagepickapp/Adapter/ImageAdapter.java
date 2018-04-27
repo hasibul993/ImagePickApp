@@ -106,7 +106,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public void addItem(ImageModel imageModel) {
         try {
             modelArrayList.add(imageModel);
-            notifyItemRangeInserted(0, modelArrayList.size());
+            notifyItemInserted(modelArrayList.size() - 1);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public void addUpdateDB(ImageModel imageModel) {
         try {
             imageAdapter.addItem(imageModel);
+            recyclerView.scrollToPosition(imageModelArrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

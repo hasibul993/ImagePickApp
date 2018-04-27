@@ -1,5 +1,6 @@
 package com.imagepickapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.imagepickapp.Adapter.ImageAdapter;
 import com.imagepickapp.Database.DatabaseAccess;
 import com.imagepickapp.Helper.AppConstant;
 import com.imagepickapp.Helper.DividerItemDecoration;
+import com.imagepickapp.Helper.Utility;
 import com.imagepickapp.MediaPermission.PermissionsChecker;
 import com.imagepickapp.MediaPermission.PickMediaActivity;
 import com.imagepickapp.Model.ImageModel;
@@ -27,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabButton;
 
     PickMediaActivity pickMediaActivity = PickMediaActivity.getInstance();
-
     PermissionsChecker checker = PermissionsChecker.getInstance();
 
     @Override
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    pickMediaActivity.checkPermission(MainActivity.this, AppConstant.PERMISSIONS_CAMERA, "Camera", getString(R.string.cameraNeverAskAgain));
+                     pickMediaActivity.checkPermission(MainActivity.this, AppConstant.PERMISSIONS_CAMERA, "Camera", getString(R.string.cameraNeverAskAgain));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -107,12 +108,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void addUpdateDB() {
+    public void addUpdateDB(ImageModel imageModel) {
         try {
-
+            imageAdapter.addItem(imageModel);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
+
+    /// this is for image picker as well as place picker
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+
+            pickMediaActivity.activityResult(MainActivity.this, requestCode, resultCode, data);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
 
 }

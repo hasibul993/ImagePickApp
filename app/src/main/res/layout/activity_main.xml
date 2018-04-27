@@ -7,7 +7,6 @@
     tools:context=".MainActivity">
 
     <include
-        android:id="@+id/recyclerview"
         layout="@layout/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -1,6 +1,7 @@
 package com.imagepickapp.Adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.imagepickapp.Model.ImageModel;
 import com.imagepickapp.R;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -63,7 +65,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             holder.fileNameTV.setText(imageModel.fileName);
             try {
                 Glide.with(context)
-                        .load(imageModel.filePath)
+                        .load(Uri.fromFile(new File(imageModel.filePath)))
+                        .placeholder(context.getResources().getDrawable(R.drawable.profile_icon_grey))
+                        .error(context.getResources().getDrawable(R.drawable.profile_icon_grey))
                         .into(holder.imageView);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -94,6 +98,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
         try {
             modelArrayList = newList;
             notifyDataSetChanged();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void addItem(ImageModel imageModel) {
+        try {
+            modelArrayList.add(imageModel);
+            notifyItemRangeInserted(0, modelArrayList.size());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

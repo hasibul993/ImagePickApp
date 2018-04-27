@@ -106,8 +106,7 @@ public class PickMediaActivity extends AppCompatActivity {
     public void ShowDialogOptionForMidiaPick(final Context context) {
 
         try {
-            final CharSequence[] items = {context.getString(R.string.takeNewPhoto), context.getString(R.string.chooseFromGallery),
-                    context.getString(R.string.remove), context.getString(R.string.cancel)};
+            final CharSequence[] items = {context.getString(R.string.takeNewPhoto), context.getString(R.string.chooseFromGallery), context.getString(R.string.cancel)};
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -130,11 +129,7 @@ public class PickMediaActivity extends AppCompatActivity {
                             Toast.makeText(context, context.getString(R.string.SDCardNotAvailable), Toast.LENGTH_SHORT).show();
                         return;
 
-                    } else if (item == 2) {
-                        imagePath = null;
-                        return;
-
-                    } else
+                    }else
                         alertDialog.cancel();
                 }
 
@@ -320,7 +315,7 @@ public class PickMediaActivity extends AppCompatActivity {
         return filePath;
     }
 
-    public void activityResult(Activity context, String screenName, TextView location, int requestCode, int resultCode, Intent data) {
+    public void activityResult(Activity context, int requestCode, int resultCode, Intent data) {
         try {
             Log.i(TAG, "result code" + resultCode);
             Log.i(TAG, "request code" + requestCode);
@@ -331,6 +326,7 @@ public class PickMediaActivity extends AppCompatActivity {
                     try {
                         selectedImageUri = data.getData();
                         imagePath = getRealPathFromURI(context, selectedImageUri);
+                        addUpdateDB(context,imagePath);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                         Log.i(TAG, "Gallery pick exception" + ex.getMessage());
@@ -345,6 +341,7 @@ public class PickMediaActivity extends AppCompatActivity {
                             imagePath = currentImageUri.getPath();
                         } else
                             imagePath = mCurrentPhotoPath;
+                        addUpdateDB(context,imagePath);
                     } catch (Exception e) {
                         utility.ShowToast(context, context.getString(R.string.internal_error));
                     }
@@ -521,10 +518,8 @@ public class PickMediaActivity extends AppCompatActivity {
                 if (checker.lacksPermissions(context, permissions)) {
                     requestPermissions(context, permissions);
                 } else {
-                    isPermissionGranted = true;
-                    /*if (StringUtils.equalsIgnoreCase(permString, "Camera"))
-                        ShowDialogOptionForMidiaPick(context);*/
-                    //allPermissionsGranted();
+                    //isPermissionGranted = true;
+                    ShowDialogOptionForMidiaPick(context);
                 }
             }
 
@@ -684,17 +679,19 @@ public class PickMediaActivity extends AppCompatActivity {
         CAMERA
     }
 
-    private void addUpdateDB(Context context, Bitmap bitmap, String filePath) {
+    private void addUpdateDB(Context context,String filePath) {
         try {
             MainActivity mainActivity = (MainActivity) context;
             //mainActivity.SetActivityIcon(bitmap, filePath);
             DatabaseAccess databaseAccess = DatabaseAccess.getInstance(context);
 
             ImageModel imageModel = new ImageModel();
-            imageModel.filePath = "";
-            imageModel.fileName = "";
+            imageModel.filePath = filePath;
+            imageModel.fileName = filePath.substring(filePath.lastIndexOf("/")+1);;
 
             databaseAccess.InsertImagesInImageDB(imageModel);
+
+            mainActivity.addUpdateDB(imageModel);
 
         } catch (Exception ex) {
             ex.printStackTrace();

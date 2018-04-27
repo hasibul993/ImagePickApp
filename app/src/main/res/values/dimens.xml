@@ -1,0 +1,15 @@
+<resources>
+
+    <!--normal size-->
+
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="fab_size">56dp</dimen>
+
+    <dimen name="header">16sp</dimen>
+    <dimen name="title">15sp</dimen>
+    <dimen name="body">14sp</dimen>
+
+
+
+</resources>
